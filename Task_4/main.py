@@ -1,0 +1,89 @@
+# **************************ДЕКОРАТОРИ********************************
+def input_add_contact_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError:
+            return "Give me the name and the phone please."
+    return inner
+
+def input_show_phone_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except IndexError:
+            return "Give me the name of the contact please."
+        except KeyError:
+            return "Give me the right name of the contact please."
+    return inner
+
+def input_change_contact_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError:
+            return "Give me the name and the number of the contact to change please."
+    return inner
+
+
+# **************************ФУНКЦІОНАЛ********************************
+def parse_input(user_input):
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, *args
+
+@input_add_contact_error
+def add_contact(args, contacts):
+    name, phone = args
+    if not name in contacts:
+        contacts[name] = phone
+        return "Contact added."
+    else:
+        return "This contact is already exists"
+
+def show_all(contacts):
+    if contacts == {}:
+        return "There isn't any contact"
+    else:
+        return "All contacts:", contacts
+
+@input_show_phone_error    
+def show_phone(args, contacts):
+    name = args[0]
+    return f"{name} phone number is: {contacts[name]}" 
+    
+@input_change_contact_error
+def change_contact(args, contacts):
+    name, phone = args
+    if name in contacts:
+        contacts[name] = phone
+        return "Contact updated."
+    else:
+        return "This contact isn't exists. Try to add it!"
+    
+# *************************ГОЛОВНА ФУНКЦІЯ***********************************
+def main():
+    contacts = {}
+    print("Welcome to the assistant bot!")
+    while True:
+        user_input = input("Enter a command: ")
+        command, *args = parse_input(user_input)
+
+        if command in ["close", "exit"]:
+            print("Good bye!")
+            break
+        elif command == "hello":
+            print("How can I help you?")
+        elif command == "add":
+            print(add_contact(args, contacts))
+        elif command == "all":
+            print(show_all(contacts))
+        elif command == "phone":
+            print(show_phone(args, contacts))
+        elif command == "change":
+            print(change_contact(args, contacts))
+        else:
+            print("Invalid command.")
+
+if __name__ == "__main__":
+    main()
