@@ -1,30 +1,15 @@
-# **************************ДЕКОРАТОРИ********************************
-def input_add_contact_error(func):
+# **************************ДЕКОРАТОР*********************************
+def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except ValueError:
             return "Give me the name and the phone please."
-    return inner
-
-def input_show_phone_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
         except IndexError:
             return "Give me the name of the contact please."
         except KeyError:
             return "Give me the right name of the contact please."
     return inner
-
-def input_change_contact_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError:
-            return "Give me the name and the number of the contact to change please."
-    return inner
-
 
 # **************************ФУНКЦІОНАЛ********************************
 def parse_input(user_input):
@@ -32,7 +17,7 @@ def parse_input(user_input):
     cmd = cmd.strip().lower()
     return cmd, *args
 
-@input_add_contact_error
+@input_error
 def add_contact(args, contacts):
     name, phone = args
     if not name in contacts:
@@ -47,12 +32,12 @@ def show_all(contacts):
     else:
         return "All contacts:", contacts
 
-@input_show_phone_error    
+@input_error    
 def show_phone(args, contacts):
     name = args[0]
     return f"{name} phone number is: {contacts[name]}" 
     
-@input_change_contact_error
+@input_error
 def change_contact(args, contacts):
     name, phone = args
     if name in contacts:
