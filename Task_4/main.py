@@ -12,10 +12,11 @@ def input_error(func):
     return inner
 
 # **************************ФУНКЦІОНАЛ********************************
+@input_error
 def parse_input(user_input):
-    cmd, *args = user_input.split()
-    cmd = cmd.strip().lower()
-    return cmd, *args
+        cmd, *args = user_input.split()
+        cmd = cmd.strip().lower()
+        return cmd, *args
 
 @input_error
 def add_contact(args, contacts):
@@ -26,6 +27,7 @@ def add_contact(args, contacts):
     else:
         return "This contact is already exists"
 
+@input_error
 def show_all(contacts):
     if contacts == {}:
         return "There isn't any contact"
